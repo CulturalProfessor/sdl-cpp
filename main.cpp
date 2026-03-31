@@ -4,24 +4,32 @@
 #include <SDL_render.h>
 #include <SDL_timer.h>
 #include <SDL_video.h>
+#include <ctime>
 #include <iostream>
+
+void randomizeColor(int &r, int &g, int &b) {
+  r = rand() % 256;
+  g = rand() % 256;
+  b = rand() % 256;
+}
 
 int main(int argx, char *argv[]) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "SDL Error: " << SDL_GetError() << std::endl;
     return 1;
   }
+  srand(time(0));
 
   int screenWidth = 1000, screenHeight = 600, rectWidth = 200, rectHeight = 150,
-      x = 0;
-  float speed = 300;
+      x = 0, y = 0;
+  float xSpeed = 300, ySpeed = 300;
   SDL_Event event;
   bool running = true;
-  bool flag = true;
+  float dx = 300; // pixels/sec
+  float dy = 300;
   Uint32 lastTime = SDL_GetTicks();
-  int randomNum1 = rand() % 255;
-  int randomNum2 = rand() % 255;
-  int randomNum3 = rand() % 255;
+  int r, g, b;
+  randomizeColor(r, g, b);
 
   SDL_Window *window = SDL_CreateWindow("HOME SCREEN", SDL_WINDOWPOS_CENTERED,
                                         SDL_WINDOWPOS_CENTERED, screenWidth,
@@ -58,31 +66,41 @@ int main(int argx, char *argv[]) {
     SDL_RenderClear(renderer);
 
     // RED Rectangle
-    SDL_Rect rect = {x, 200, rectWidth, rectHeight};
-    SDL_SetRenderDrawColor(renderer, randomNum1, randomNum2, randomNum3, 255);
+    SDL_Rect rect = {x, y, rectWidth, rectHeight};
+    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
     SDL_RenderFillRect(renderer, &rect);
 
     SDL_RenderPresent(renderer);
 
+    // Right wall
     if (x + rectWidth >= screenWidth) {
-      flag = false;
-      randomNum1 = rand() % 255;
-      randomNum2 = rand() % 255;
-      randomNum3 = rand() % 255;
+      x = screenWidth - rectWidth; // prevent sticking
+      dx = -dx;
+      randomizeColor(r, g, b);
     }
+
+    // Left wall
     if (x <= 0) {
-      flag = true;
-      randomNum1 = rand() % 255;
-      randomNum2 = rand() % 255;
-      randomNum3 = rand() % 255;
+      x = 0;
+      dx = -dx;
+      randomizeColor(r, g, b);
     }
 
-    if (flag) {
-      x += speed * deltaTime;
-
-    } else {
-      x -= speed * deltaTime;
+    // Bottom wall
+    if (y + rectHeight >= screenHeight) {
+      y = screenHeight - rectHeight;
+      dy = -dy;
+      randomizeColor(r, g, b);
     }
+
+    // Top wall
+    if (y <= 0) {
+      y = 0;
+      dy = -dy;
+      randomizeColor(r, g, b);
+    }
+    x += dx * deltaTime;
+    y += dy * deltaTime;
 
     SDL_Delay(16);
   }
