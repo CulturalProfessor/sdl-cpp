@@ -14,11 +14,14 @@ int main(int argx, char *argv[]) {
 
   int screenWidth = 1000, screenHeight = 600, rectWidth = 200, rectHeight = 150,
       x = 0;
-      float speed = 300;
+  float speed = 300;
   SDL_Event event;
   bool running = true;
   bool flag = true;
   Uint32 lastTime = SDL_GetTicks();
+  int randomNum1 = rand() % 255;
+  int randomNum2 = rand() % 255;
+  int randomNum3 = rand() % 255;
 
   SDL_Window *window = SDL_CreateWindow("HOME SCREEN", SDL_WINDOWPOS_CENTERED,
                                         SDL_WINDOWPOS_CENTERED, screenWidth,
@@ -45,9 +48,7 @@ int main(int argx, char *argv[]) {
         running = false;
       }
     }
-    int randomNum1 = rand() % 255;
-    int randomNum2 = rand() % 255;
-    int randomNum3 = rand() % 255;
+
     Uint32 currentTime = SDL_GetTicks();
     float deltaTime = (currentTime - lastTime) / 1000.0f;
     lastTime = currentTime;
@@ -65,16 +66,22 @@ int main(int argx, char *argv[]) {
 
     if (x + rectWidth >= screenWidth) {
       flag = false;
+      randomNum1 = rand() % 255;
+      randomNum2 = rand() % 255;
+      randomNum3 = rand() % 255;
     }
     if (x <= 0) {
       flag = true;
+      randomNum1 = rand() % 255;
+      randomNum2 = rand() % 255;
+      randomNum3 = rand() % 255;
     }
 
     if (flag) {
-    x += speed * deltaTime;
+      x += speed * deltaTime;
 
     } else {
-     x -= speed * deltaTime;
+      x -= speed * deltaTime;
     }
 
     SDL_Delay(16);
