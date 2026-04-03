@@ -1,5 +1,6 @@
 #include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
+#include <glad/glad.h>
 #include <iostream>
 
 int gScreenWidth = 640;
@@ -7,6 +8,13 @@ int gScreenHeight = 480;
 SDL_Window *gGraphicsApplicationWindow = nullptr;
 SDL_GLContext gOpenGLContext = nullptr;
 bool gQuit = false;
+
+void getOpenGLVersion() {
+  std::cout << "OpenGL" << glGetString(GL_VENDOR) << std::endl;
+  std::cout << "OpenGL" << glGetString(GL_RENDERER) << std::endl;
+  std::cout << "OpenGL" << glGetString(GL_VERSION) << std::endl;
+  std::cout << "OpenGL" << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+}
 
 void initializeProgram() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -32,6 +40,12 @@ void initializeProgram() {
     std::cout << "OpenGL Context not initialized" << std::endl;
     exit(1);
   }
+
+  if (!gladLoadGLLoader(SDL_GL_GetProcAddress)) {
+    std::cout << "GLAD not initialized" << glGetString(GL_VENDOR) << std::endl;
+  }
+
+  getOpenGLVersion();
 }
 
 void input() {

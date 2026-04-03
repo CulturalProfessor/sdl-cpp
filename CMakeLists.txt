@@ -8,6 +8,8 @@ find_package(OpenGL REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
-add_executable(main main.cpp)
+add_executable(main main.cpp src/glad.c)
 
 target_link_libraries(main ${SDL2_LIBRARIES} ${OPENGL_gl_LIBRARY})
+
+target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/include)
