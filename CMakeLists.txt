@@ -4,7 +4,10 @@ project(SDLApp)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(OpenGL REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIRS})
 
 add_executable(main main.cpp)
-target_link_libraries(main ${SDL2_LIBRARIES})
+
+target_link_libraries(main ${SDL2_LIBRARIES} ${OPENGL_gl_LIBRARY})
