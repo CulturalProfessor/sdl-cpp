@@ -1,5 +1,5 @@
-#include <OpenGL/gl3.h>
 #include <SDL2/SDL.h>
+#include <fstream>
 #include <glad/glad.h>
 #include <iostream>
 #include <string>
@@ -13,21 +13,20 @@ bool gQuit = false;
 GLuint gVertexArrayObject = 0;
 GLuint gVertexBufferObject = 0;
 GLuint gGraphicsPipelineShaderProgram = 0;
-const std::string gVertexShaderSource =
-    "#version 410 core\n"
-    "in vec4 position;\n"
-    "void main()\n"
-    "{\n"
-    "  gl_Position = vec4(position.x, position.y, position.z, position.w);\n"
-    "}\n";
 
-const std::string gFragmentShaderSource =
-    "#version 410 core\n"
-    "out vec4 color;\n"
-    "void main()\n"
-    "{\n"
-    "  color = vec4(1.0f, 0.5f, 0.0f, 1.0f);\n"
-    "}\n";
+std::string loadShaderAsString(const std::string &filename) {
+  std::string result = "";
+  std::string line = "";
+  std::ifstream myFile(filename.c_str());
+
+  if (myFile.is_open()) {
+    while (std::getline(myFile, line)) {
+      result += line + '\n';
+    }
+    myFile.close();
+  }
+  return result;
+}
 
 void getOpenGLVersion() {
   std::cout << "OpenGL" << glGetString(GL_VENDOR) << std::endl;
@@ -118,8 +117,11 @@ GLuint createShaderProgram(const std::string &vertexShaderSource,
 }
 
 void createGraphicsPipeline() {
+  // path should be according to exe's location
+  std::string vertexShaderSource = loadShaderAsString("../shaders/vert.glsl");
+  std::string fragmentShaderSource = loadShaderAsString("../shaders/frag.glsl");
   gGraphicsPipelineShaderProgram =
-      createShaderProgram(gVertexShaderSource, gFragmentShaderSource);
+      createShaderProgram(vertexShaderSource, fragmentShaderSource);
 }
 
 void input() {
