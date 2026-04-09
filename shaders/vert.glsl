@@ -1,8 +1,12 @@
 #version 410 core
 
-in vec4 position;
+layout(location=0) in vec3 position;
+layout(location=1) in vec3 vetexColors;
+
+out vec3 v_vertexColors;
 
 void main()
 {
-    gl_Position = vec4(position.x, position.y, position.z, position.w);
+    v_vertexColors=vetexColors;
+    gl_Position = vec4(position.x, position.y, position.z, 1.0f);
 }

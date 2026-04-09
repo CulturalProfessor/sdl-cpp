@@ -12,6 +12,7 @@ SDL_GLContext gOpenGLContext = nullptr;
 bool gQuit = false;
 GLuint gVertexArrayObject = 0;
 GLuint gVertexBufferObject = 0;
+GLuint gVertexBufferObject2 = 0;
 GLuint gGraphicsPipelineShaderProgram = 0;
 
 std::string loadShaderAsString(const std::string &filename) {
@@ -72,6 +73,9 @@ void vertexSpecification() {
   const std::vector<GLfloat> vertexPosition{
       -0.8f, -0.8f, 0.0f, 0.8f, -0.8f, 0.0f, 0.0f, 0.8f, 0.0f,
   };
+  const std::vector<GLfloat> vertexColors{
+      1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+  };
 
   glGenVertexArrays(1, &gVertexArrayObject);
   glBindVertexArray(gVertexArrayObject);
@@ -82,8 +86,17 @@ void vertexSpecification() {
   glEnableVertexAttribArray(0);
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
 
+  // Set colors
+  glGenBuffers(1, &gVertexBufferObject2);
+  glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject2);
+  glBufferData(GL_ARRAY_BUFFER, vertexColors.size() * sizeof(GLfloat),
+               vertexColors.data(), GL_STATIC_DRAW);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+
   glBindVertexArray(0);
   glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
 }
 
 GLuint compileShader(GLuint type, const std::string &source) {
