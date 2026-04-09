@@ -12,7 +12,6 @@ SDL_GLContext gOpenGLContext = nullptr;
 bool gQuit = false;
 GLuint gVertexArrayObject = 0;
 GLuint gVertexBufferObject = 0;
-GLuint gVertexBufferObject2 = 0;
 GLuint gGraphicsPipelineShaderProgram = 0;
 
 std::string loadShaderAsString(const std::string &filename) {
@@ -70,29 +69,30 @@ void initializeProgram() {
 }
 
 void vertexSpecification() {
-  const std::vector<GLfloat> vertexPosition{
-      -0.8f, -0.8f, 0.0f, 0.8f, -0.8f, 0.0f, 0.0f, 0.8f, 0.0f,
-  };
-  const std::vector<GLfloat> vertexColors{
-      1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+  const std::vector<GLfloat> vertexData{
+      -0.8f, -0.8f, 0.0f, // vertex 1
+      1.0f,  0.0f,  0.0f, // color of vertex 1
+      0.8f,  -0.8f, 0.0f, // vertex 2
+      0.0f,  1.0f,  0.0f, // color of vertex 2
+      0.0f,  0.8f,  0.0f, // vertex 3
+      0.0f,  0.0f,  1.0f, // color of vertex 3
+
   };
 
   glGenVertexArrays(1, &gVertexArrayObject);
   glBindVertexArray(gVertexArrayObject);
   glGenBuffers(1, &gVertexBufferObject);
   glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject);
-  glBufferData(GL_ARRAY_BUFFER, vertexPosition.size() * sizeof(GLfloat),
-               vertexPosition.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(GLfloat),
+               vertexData.data(), GL_STATIC_DRAW);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 6,
+                        (void *)0);
 
-  // Set colors
-  glGenBuffers(1, &gVertexBufferObject2);
-  glBindBuffer(GL_ARRAY_BUFFER, gVertexBufferObject2);
-  glBufferData(GL_ARRAY_BUFFER, vertexColors.size() * sizeof(GLfloat),
-               vertexColors.data(), GL_STATIC_DRAW);
+  // Color Information
   glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GL_FLOAT) * 6,
+                        (GLvoid *)(sizeof(GL_FLOAT) * 3));
 
   glBindVertexArray(0);
   glDisableVertexAttribArray(0);
